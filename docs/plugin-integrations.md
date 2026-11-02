@@ -39,4 +39,6 @@ The registry exposes `getPlugins()`, `getPlugin(id)`, `probePlugin(id, context)`
 
 - **Achievement Badges** — first registered adapter. The existing `achievementsApi` remains the source of truth for its API; `AchievementsContext` uses the registry for discovery. Its existing Game Center screens and behavior are preserved.
 
-More integrations should be added one at a time, with API fixtures/tests and a real-TV check before being exposed in the Plugin Center UI.
+The Settings > Integrations > Plugin Center screen lists registered client adapters and summarizes the existing Moonbase, Seerr and RomM entry points. It reuses their current contexts and settings screens; it does not start duplicate probes or polling loops. Server integrations that cannot be enabled or disabled safely from the client are shown as status/navigation entries rather than given a misleading switch.
+
+More adapters should be added one at a time, with API fixtures/tests and a real-TV check before being exposed as client plugin entries.
