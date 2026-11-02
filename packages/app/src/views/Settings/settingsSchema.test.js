@@ -130,6 +130,8 @@ describe('settings schema', () => {
 			expect(screen.sub.rows).toEqual([
 				{kind: KIND.CUSTOM, id: 'traktPanel', render: 'traktPanel'}
 			]);
+			expect(screen.sub.when(ctx)).toBe(true);
+			expect(screen.sub.when({...ctx, serverType: 'emby'})).toBe(false);
 		});
 	});
 
