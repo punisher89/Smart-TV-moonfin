@@ -89,7 +89,7 @@ const TraktPanel = ({api, onSelectItem}) => {
 			setStatus((current) => ({
 				...(current || {available: true}),
 				available: true,
-				status: ownConfig.AccessToken && ownConfig.RefreshToken ? 'connected' : 'not-authorized'
+				status: current?.status === 'disabled' ? 'disabled' : (ownConfig.AccessToken && ownConfig.RefreshToken ? 'connected' : 'not-authorized')
 			}));
 			setFolders(Array.isArray(virtualFolders) ? virtualFolders : []);
 		} catch (error) {
@@ -327,7 +327,9 @@ const TraktPanel = ({api, onSelectItem}) => {
 				<SectionTitle>{$L('Account authorization')}</SectionTitle>
 				<InfoRow id='trakt-account-status' label={$L('Account status')} value={statusText} icon='account_circle' />
 				{!isAdmin && <InfoRow id='trakt-account-admin-required' label={$L('Authorization unavailable')} value={$L('Administrator permission is required to connect or disconnect this server from Trakt.')} icon='lock' />}
-				{isAdmin && (deviceCode ? (
+				{isAdmin && !status && <InfoRow id='trakt-account-checking' label={$L('Plugin status')} value={$L('Checking...')} icon='sync' />}
+				{isAdmin && status && !status.available && <InfoRow id='trakt-account-unavailable' label={$L('Authorization unavailable')} value={status.status === 'permission-required' ? $L('Administrator permission is required to inspect installed plugins.') : $L('Install and enable the Trakt plugin on your Jellyfin server first.')} icon='info' />}
+				{isAdmin && status?.available && status.status !== 'disabled' && (deviceCode ? (
 					<>
 						<InfoRow id='trakt-device-code' label={$L('Activation code')} value={deviceCode} icon='lock' />
 						<InfoRow id='trakt-activation-url' label={$L('Activation website')} value='https://trakt.tv/activate' icon='link' />
@@ -336,6 +338,7 @@ const TraktPanel = ({api, onSelectItem}) => {
 				) : (
 					<NavRow title={status?.status === 'connected' ? $L('Re-authorize Trakt') : $L('Connect Trakt account')} desc={$L('Start device authorization')} icon='link' onClick={startAuthorization} />
 				))}
+				{isAdmin && status?.status === 'disabled' && <InfoRow id='trakt-account-disabled' label={$L('Plugin disabled')} value={$L('Enable Trakt in Jellyfin Dashboard → Plugins before connecting an account.')} icon='info' />}
 				{isAdmin && status?.status === 'connected' && <NavRow title={$L('Disconnect Trakt')} desc={$L('Revoke this server connection')} icon='link' onClick={disconnect} />}
 				{message && <InfoRow id='trakt-account-message' label={$L('Information')} value={message} icon='info' />}
 			</div>
