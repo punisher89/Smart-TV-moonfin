@@ -14,7 +14,7 @@ const request = async (path, method = 'GET', body, timeoutMs = TIMEOUT_MS) => {
 	const serverUrl = getServerUrl();
 	const authHeader = getAuthHeader();
 	if (!serverUrl || !authHeader) throw new Error('Not connected to a Jellyfin server');
-	const response = await platformFetch(`${serverUrl.replace(/\\/+$/, '')}${path}`, {
+	const response = await platformFetch(`${serverUrl.replace(/\/+$/, '')}${path}`, {
 		method,
 		headers: {
 			Authorization: authHeader,
