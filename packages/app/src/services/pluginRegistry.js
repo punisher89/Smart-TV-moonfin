@@ -98,7 +98,7 @@ registerPlugin({
 registerPlugin({
 	id: 'trakt',
 	name: 'Trakt',
-	description: 'Watch history synchronization and playback scrobbling through the Jellyfin server plugin',
+	description: 'Account linking, sync controls, personalized recommendations and ratings through the Jellyfin server plugin',
 	icon: 'history',
 	category: 'tracking',
 	serverTypes: ['jellyfin'],
