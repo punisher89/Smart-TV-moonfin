@@ -2,6 +2,7 @@ import {useState} from 'react';
 import $L from '@enact/i18n/$L';
 
 import {getPlugins} from '../../services/pluginRegistry';
+import {isBackKey} from '../../utils/keys';
 import {InfoRow, NavRow, SectionTitle} from './settingsRows';
 
 // The registry contains only adapters shipped with this client. Server-side plugins never
@@ -13,6 +14,13 @@ const PluginCenterPanel = ({
 	const [selectedPluginId, setSelectedPluginId] = useState(null);
 	const plugins = getPlugins();
 	const selectedPlugin = plugins.find((plugin) => plugin.id === selectedPluginId);
+	const handleDetailKeyDown = (event) => {
+		if (selectedPluginId && isBackKey(event)) {
+			event.preventDefault();
+			event.stopPropagation();
+			setSelectedPluginId(null);
+		}
+	};
 
 	const getAvailability = (plugin) => {
 		if (plugin.id === 'achievement-badges') return Boolean(achievements.available);
@@ -38,7 +46,7 @@ const PluginCenterPanel = ({
 		const isMoonfin = selectedPlugin.id === 'moonfin-server';
 
 		return (
-			<div>
+			<div onKeyDown={handleDetailKeyDown}>
 				<NavRow
 					spotlightId='plugin-detail-back'
 					title={$L('Plugin Center')}
