@@ -326,7 +326,8 @@ const TraktPanel = ({api, onSelectItem}) => {
 				<NavRow title={$L('Trakt settings')} desc={$L('Back to settings categories')} icon='arrow_back' onClick={() => setPage('settings')} />
 				<SectionTitle>{$L('Account authorization')}</SectionTitle>
 				<InfoRow id='trakt-account-status' label={$L('Account status')} value={statusText} icon='account_circle' />
-				{deviceCode ? (
+				{!isAdmin && <InfoRow id='trakt-account-admin-required' label={$L('Authorization unavailable')} value={$L('Administrator permission is required to connect or disconnect this server from Trakt.')} icon='lock' />}
+				{isAdmin && (deviceCode ? (
 					<>
 						<InfoRow id='trakt-device-code' label={$L('Activation code')} value={deviceCode} icon='lock' />
 						<InfoRow id='trakt-activation-url' label={$L('Activation website')} value='https://trakt.tv/activate' icon='link' />
@@ -334,8 +335,8 @@ const TraktPanel = ({api, onSelectItem}) => {
 					</>
 				) : (
 					<NavRow title={status?.status === 'connected' ? $L('Re-authorize Trakt') : $L('Connect Trakt account')} desc={$L('Start device authorization')} icon='link' onClick={startAuthorization} />
-				)}
-				{status?.status === 'connected' && <NavRow title={$L('Disconnect Trakt')} desc={$L('Revoke this server connection')} icon='link' onClick={disconnect} />}
+				))}
+				{isAdmin && status?.status === 'connected' && <NavRow title={$L('Disconnect Trakt')} desc={$L('Revoke this server connection')} icon='link' onClick={disconnect} />}
 				{message && <InfoRow id='trakt-account-message' label={$L('Information')} value={message} icon='info' />}
 			</div>
 		);
