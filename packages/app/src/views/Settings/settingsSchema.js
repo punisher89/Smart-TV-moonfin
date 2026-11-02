@@ -1061,9 +1061,28 @@ export const SETTINGS_SCHEMA = [
 		alwaysMenu: true,
 		when: (ctx) => !ctx.settings.kidsModeEnabled,
 		label: () => $L('Integrations'),
-		description: () => $L('Seerr and Achievement Badges'),
+		description: () => $L('Plugin Center, Trakt, Moonbase, Seerr and Achievement Badges'),
 		icon: 'hub',
 		subcategories: [
+			{
+				id: 'pluginCenter',
+				clean: true,
+				icon: 'extension',
+				label: () => $L('Plugin Center'),
+				description: () => $L('Installed client integrations and their server availability'),
+				keywords: () => [$L('Plugins'), $L('Extensions'), $L('Integrations')],
+				rows: [{kind: KIND.CUSTOM, id: 'pluginCenter', render: 'pluginCenter'}]
+			},
+			{
+				id: 'trakt',
+				clean: true,
+				when: (ctx) => ctx.serverType === 'jellyfin',
+				icon: 'history',
+				label: () => $L('Trakt'),
+				description: () => $L('Trakt account, synchronization settings, recommendations and ratings'),
+				keywords: () => [$L('Watch history'), $L('Scrobbling'), $L('Recommendations'), $L('Ratings')],
+				rows: [{kind: KIND.CUSTOM, id: 'traktPanel', render: 'traktPanel'}]
+			},
 			{
 				id: 'seerr',
 				clean: true,

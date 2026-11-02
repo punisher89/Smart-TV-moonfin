@@ -1,6 +1,7 @@
 import {createContext, useCallback, useContext, useEffect, useMemo, useRef, useState} from 'react';
 
 import * as achievementsApi from '../services/achievementsApi';
+import {probePlugin} from '../services/pluginRegistry';
 import {sameUserId, threadHasNewFromOthers} from '../utils/achievementsModel';
 import {afterHomeReady} from '../utils/homeReady';
 import {useAuth} from './AuthContext';
@@ -61,7 +62,8 @@ export const AchievementsProvider = ({children}) => {
 		if (!isAuthenticated || !serverUrl || !accessToken) return undefined;
 
 		let cancelled = false;
-		afterHomeReady().then(() => (cancelled ? false : achievementsApi.probe())).then((available) => {
+		afterHomeReady().then(() => (cancelled ? {available: false} : probePlugin('achievement-badges'))).then((result) => {
+			const available = result.available;
 			if (cancelled) return;
 			const flags = achievementsApi.getFlags();
 			setState({

@@ -76,6 +76,8 @@ import {mediaBarExternalListOptions} from '../Browse/featuredExternal';
 import SeerrAccountPanel from './SeerrAccountPanel';
 import RommAccountPanel from './RommAccountPanel';
 import MoonbasePanel from './MoonbasePanel';
+import PluginCenterPanel from './PluginCenterPanel';
+import TraktPanel from './TraktPanel';
 import {LOG_RENDER_STEP} from './useDiagnosticsLog';
 import {DETAIL_SECTIONS_HIDDEN_KEY, toggleHiddenSection} from '../../utils/detailSectionLayout';
 
@@ -1272,6 +1274,20 @@ const Settings = ({ onBack, onLibrariesChanged, onRunSetupWizard, onSelectItem, 
 	// Kept out of settingsCtx because the search index has no use for them and they are
 	// rebuilt every render, which would defeat the memo above.
 	const customRenderers = {
+		pluginCenter: () => (
+			<PluginCenterPanel
+				achievements={achievements}
+				seerr={seerr}
+				romm={romm}
+				moonbaseEnabled={settings.useMoonfinPlugin}
+				onOpenAchievements={() => openAchievementsView('achievements', 'plugin-center-achievement-badges')}
+				onOpenMoonbase={() => openScreen('account', 'settingsSync', 'plugin-center-moonbase')}
+				onOpenSeerr={() => openScreen('integrations', 'seerr', 'plugin-center-seerr')}
+				onOpenRomm={() => openScreen('integrations', 'romm', 'plugin-center-romm')}
+				onOpenTrakt={() => openScreen('integrations', 'trakt', 'plugin-center-trakt')}
+			/>
+		),
+		traktPanel: () => <TraktPanel api={api} onSelectItem={onSelectItem} />,
 		moonbasePlugin: () => (
 			<MoonbasePanel
 				enabled={settings.useMoonfinPlugin}
