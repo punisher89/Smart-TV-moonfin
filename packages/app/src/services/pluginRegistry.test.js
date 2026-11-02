@@ -8,7 +8,7 @@ const registry = require('./pluginRegistry');
 beforeEach(() => {
 	probe.mockReset();
 	probe.mockResolvedValue(true);
-	traktProbe.mockReset();	
+	traktProbe.mockReset();
 });
 
 test('registers the built-in Achievement Badges adapter with useful metadata', () => {
