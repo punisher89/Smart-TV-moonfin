@@ -72,3 +72,16 @@ registerPlugin({
 	order: 10,
 	detect: () => achievementsApi.probe()
 });
+
+registerPlugin({
+	id: 'moonfin-server',
+	name: 'Moonfin Server Plugin',
+	description: 'Server features including Seerr, Anime Markers, messages, themes and settings sync',
+	icon: 'hub',
+	category: 'server',
+	serverTypes: ['jellyfin'],
+	order: 20,
+	// SeerrContext already performs the authenticated Moonfin Ping at setup. Reuse that
+	// result rather than making the Plugin Center issue another request.
+	detect: ({pluginInfo} = {}) => Boolean(pluginInfo && typeof pluginInfo === 'object')
+});
