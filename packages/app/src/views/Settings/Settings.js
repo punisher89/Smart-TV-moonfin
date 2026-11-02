@@ -77,6 +77,7 @@ import SeerrAccountPanel from './SeerrAccountPanel';
 import RommAccountPanel from './RommAccountPanel';
 import MoonbasePanel from './MoonbasePanel';
 import PluginCenterPanel from './PluginCenterPanel';
+import TraktPanel from './TraktPanel';
 import {LOG_RENDER_STEP} from './useDiagnosticsLog';
 import {DETAIL_SECTIONS_HIDDEN_KEY, toggleHiddenSection} from '../../utils/detailSectionLayout';
 
@@ -1283,8 +1284,10 @@ const Settings = ({ onBack, onLibrariesChanged, onRunSetupWizard, onSelectItem, 
 				onOpenMoonbase={() => openScreen('account', 'settingsSync', 'plugin-center-moonbase')}
 				onOpenSeerr={() => openScreen('integrations', 'seerr', 'plugin-center-seerr')}
 				onOpenRomm={() => openScreen('integrations', 'romm', 'plugin-center-romm')}
+				onOpenTrakt={() => openScreen('integrations', 'trakt', 'plugin-center-trakt')}
 			/>
 		),
+		traktPanel: () => <TraktPanel api={api} onSelectItem={onSelectItem} />,
 		moonbasePlugin: () => (
 			<MoonbasePanel
 				enabled={settings.useMoonfinPlugin}
