@@ -17,8 +17,16 @@ const PluginCenterPanel = ({
 			{plugins.map((plugin) => {
 				const available = plugin.id === 'achievement-badges'
 					? achievements.available
-					: false;
-				const status = available ? $L('Available') : $L('Not detected on this server');
+					: plugin.id === 'moonfin-server'
+						? Boolean(seerr.pluginInfo)
+						: false;
+				const status = plugin.id === 'moonfin-server' && !moonbaseEnabled
+					? $L('Enable Moonfin integration to check')
+					: available
+						? (plugin.id === 'moonfin-server' && seerr.pluginInfo.version
+							? `${$L('Available')} · ${seerr.pluginInfo.version}`
+							: $L('Available'))
+						: $L('Not detected on this server');
 
 				if (available && plugin.id === 'achievement-badges') {
 					return (
@@ -29,6 +37,19 @@ const PluginCenterPanel = ({
 							desc={status}
 							icon={plugin.icon}
 							onClick={onOpenAchievements}
+						/>
+					);
+				}
+
+				if (plugin.id === 'moonfin-server') {
+					return (
+						<NavRow
+							key={plugin.id}
+							spotlightId={`plugin-center-${plugin.id}`}
+							title={plugin.name}
+							desc={status}
+							icon={plugin.icon}
+							onClick={onOpenMoonbase}
 						/>
 					);
 				}
@@ -44,13 +65,6 @@ const PluginCenterPanel = ({
 				);
 			})}
 			<SectionTitle>{$L('Service Integrations')}</SectionTitle>
-			<NavRow
-				spotlightId='plugin-center-moonbase'
-				title={$L('Moonbase')}
-				desc={moonbaseEnabled ? (moonbaseStatus || $L('Enabled')) : $L('Disabled')}
-				icon='sync'
-				onClick={onOpenMoonbase}
-			/>
 			<NavRow
 				spotlightId='plugin-center-seerr'
 				title={$L('Seerr')}
