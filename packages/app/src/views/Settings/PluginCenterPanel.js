@@ -114,7 +114,6 @@ const PluginCenterPanel = ({
 						<SectionTitle>{$L('Trakt features')}</SectionTitle>
 						<InfoRow id='plugin-detail-trakt-scrobble' label={$L('Playback scrobbling')} value={$L('The Jellyfin server plugin reports playback progress to Trakt')} icon='play_circle' />
 						<InfoRow id='plugin-detail-trakt-history' label={$L('Watch history sync')} value={$L('Synchronize watched movies and episodes with your Trakt account')} icon='history' />
-						<InfoRow id='plugin-detail-trakt-recommendations' label={$L('Recommendations and ratings')} value={$L('Use the server plugin API for supported Trakt recommendations and ratings')} icon='star' />
 						<InfoRow id='plugin-detail-trakt-setup' label={$L('Configuration')} value={$L('Manage account authorization and sync options in Jellyfin Dashboard → Plugins → Trakt')} icon='settings' />
 					</>
 				)}
