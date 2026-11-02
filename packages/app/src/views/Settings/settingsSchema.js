@@ -1061,7 +1061,7 @@ export const SETTINGS_SCHEMA = [
 		alwaysMenu: true,
 		when: (ctx) => !ctx.settings.kidsModeEnabled,
 		label: () => $L('Integrations'),
-		description: () => $L('Seerr and Achievement Badges'),
+		description: () => $L('Plugin Center, Moonbase, Seerr and Achievement Badges'),
 		icon: 'hub',
 		subcategories: [
 			{
