@@ -1,11 +1,14 @@
 jest.mock('./achievementsApi', () => ({probe: jest.fn()}));
+jest.mock('./traktApi', () => ({probe: jest.fn()}));
 
 const {probe} = require('./achievementsApi');
+const {probe: traktProbe} = require('./traktApi');
 const registry = require('./pluginRegistry');
 
 beforeEach(() => {
 	probe.mockReset();
 	probe.mockResolvedValue(true);
+	traktProbe.mockReset();	
 });
 
 test('registers the built-in Achievement Badges adapter with useful metadata', () => {
@@ -47,7 +50,7 @@ test('rejects malformed and duplicate adapters', () => {
 test('sorts adapters by order and then by name', () => {
 	const removeZ = registry.registerPlugin({id: 'test-z', name: 'Zed', order: 50, detect: jest.fn()});
 	const removeA = registry.registerPlugin({id: 'test-a', name: 'Alpha', order: 50, detect: jest.fn()});
-	expect(registry.getPlugins().map((plugin) => plugin.id)).toEqual(['achievement-badges', 'moonfin-server', 'test-a', 'test-z']);
+	expect(registry.getPlugins().map((plugin) => plugin.id)).toEqual(['achievement-badges', 'moonfin-server', 'trakt', 'test-a', 'test-z']);
 	removeA();
 	removeZ();
 });
@@ -72,4 +75,5 @@ test('does not call a Jellyfin adapter on Emby and isolates adapter errors', asy
 test('returns a result map for every registered adapter', async () => {
 	const results = await registry.probePlugins({serverType: 'jellyfin'});
 	expect(results['achievement-badges']).toMatchObject({status: 'available', available: true});
+	expect(results.trakt).toMatchObject({status: 'error', available: false});
 });
