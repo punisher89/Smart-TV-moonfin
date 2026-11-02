@@ -413,11 +413,19 @@ const TraktPanel = ({api, onSelectItem}) => {
 					const title = entry.title || entry.Title || $L('Unknown title');
 					const year = entry.year || entry.Year;
 					const rating = entry.rating || entry.Rating;
+					const genres = entry.genres || entry.Genres || [];
+					const overview = entry.overview || entry.Overview || '';
+					const details = [
+						year,
+						rating ? `${$L('Trakt rating')}: ${rating}` : '',
+						Array.isArray(genres) ? genres.slice(0, 2).join(' · ') : '',
+						overview ? overview.slice(0, 110) : ''
+					].filter(Boolean).join(' · ') || $L('Open matching title in your Jellyfin library');
 					return (
 						<NavRow
 							key={`${entry.ids?.trakt || entry.Ids?.Trakt || title}-${index}`}
-							title={year ? `${title} (${year})` : title}
-							desc={rating ? `${$L('Trakt rating')}: ${rating}` : $L('Open matching title in your Jellyfin library')}
+							title={title}
+							desc={details}
 							icon={recommendationType === 'shows' ? 'tv' : 'movie'}
 							onClick={() => openRecommendation(entry)}
 						/>
