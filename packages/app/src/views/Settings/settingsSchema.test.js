@@ -11,7 +11,7 @@ import {buildSettingsIndex, matchSettings, resultSpotlightId} from './settingsSe
 // a key that does not exist writes junk into settings, and a repeated spotlight id makes
 // a deep linked search result focus the wrong row.
 
-const CUSTOM_RENDERERS = ['pluginCenter', 'moonbasePlugin', 'seerrPanel', 'rommPanel', 'aboutHeader', 'aboutDataActions', 'subtitlePreview', 'imageCacheActions', 'checkForUpdates', 'playbackTimePreview', 'screensaverPreview', 'loadingAnimationPreview', 'trickplayPreview'];
+const CUSTOM_RENDERERS = ['pluginCenter', 'traktPanel', 'moonbasePlugin', 'seerrPanel', 'rommPanel', 'aboutHeader', 'aboutDataActions', 'subtitlePreview', 'imageCacheActions', 'checkForUpdates', 'playbackTimePreview', 'screensaverPreview', 'loadingAnimationPreview', 'trickplayPreview'];
 const KEYED = [KIND.TOGGLE, KIND.OPTION, KIND.SLIDER];
 
 // Enough of a context that every label, value and condition can be called.
@@ -118,6 +118,17 @@ describe('settings schema', () => {
 			expect(screen).toBeDefined();
 			expect(screen.sub.rows).toEqual([
 				{kind: KIND.CUSTOM, id: 'pluginCenter', render: 'pluginCenter'}
+			]);
+		});
+	});
+
+	describe('Trakt integration screen', () => {
+		test('the integrations category exposes the dedicated Trakt dashboard', () => {
+			const screen = allScreens().find(({category, sub}) => category.id === 'integrations' && sub.id === 'trakt');
+
+			expect(screen).toBeDefined();
+			expect(screen.sub.rows).toEqual([
+				{kind: KIND.CUSTOM, id: 'traktPanel', render: 'traktPanel'}
 			]);
 		});
 	});
