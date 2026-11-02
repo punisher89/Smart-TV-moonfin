@@ -1065,6 +1065,15 @@ export const SETTINGS_SCHEMA = [
 		icon: 'hub',
 		subcategories: [
 			{
+				id: 'pluginCenter',
+				clean: true,
+				icon: 'extension',
+				label: () => $L('Plugin Center'),
+				description: () => $L('Installed client integrations and their server availability'),
+				keywords: () => [$L('Plugins'), $L('Extensions'), $L('Integrations')],
+				rows: [{kind: KIND.CUSTOM, id: 'pluginCenter', render: 'pluginCenter'}]
+			},
+			{
 				id: 'seerr',
 				clean: true,
 				icon: 'seerr',
