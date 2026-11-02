@@ -44,3 +44,8 @@ The registry exposes `getPlugins()`, `getPlugin(id)`, `probePlugin(id, context)`
 The Settings > Integrations > Plugin Center screen lists registered client adapters and summarizes the existing Seerr and RomM entry points. Selecting an adapter opens a detail view with its detection status, description, and supported client-facing capabilities; actions lead to the existing Game Center or Moonbase settings rather than duplicating them. The detail view handles the TV remote Back key as well as its on-screen back row. Plugin Center reuses current contexts and settings screens; it does not start duplicate probes or polling loops. Server integrations that cannot be enabled or disabled safely from the client are shown as status/navigation entries rather than given a misleading switch.
 
 More adapters should be added one at a time, with API fixtures/tests and a real-TV check before being exposed as client plugin entries.
+
+
+### Trakt API boundary
+
+The official Jellyfin Trakt controller exposes device authorization, authorization status, per-item ratings, and personalized movie/show recommendations. Watch-history import/export, playback scrobbling, and collection synchronization are implemented by its server-side scheduled/event tasks rather than browseable client endpoints. The TV client therefore exposes those controls and their settings but does not claim to provide a standalone Trakt watchlist/history browser. Adding direct Trakt account browsing would require a separate, properly registered Trakt API client and a safe per-user OAuth/token flow; the client must not extract or reuse the server plugin's stored access tokens.
