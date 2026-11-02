@@ -306,32 +306,81 @@ const TraktPanel = ({api, onSelectItem}) => {
 		return (
 			<div>
 				<NavRow title={$L('Trakt')} desc={$L('Back to Trakt overview')} icon='arrow_back' onClick={() => setPage('home')} />
+				<SectionTitle>{$L('Trakt settings')}</SectionTitle>
+				<InfoRow id='trakt-settings-status' label={$L('Account status')} value={statusText} icon='account_circle' />
+				<NavRow title={$L('Account and authorization')} desc={$L('Connect, re-authorize or disconnect your Trakt account')} icon='account_circle' onClick={() => setPage('settings-account')} />
+				<NavRow title={$L('Import from Trakt')} desc={$L('Watched state and playback progress coming into Jellyfin')} icon='download' onClick={() => setPage('settings-import')} />
+				<NavRow title={$L('Export to Trakt')} desc={$L('Live scrobbling and scheduled watch-history updates')} icon='upload' onClick={() => setPage('settings-export')} />
+				<NavRow title={$L('Collections and library')} desc={$L('Collection sync and excluded library folders')} icon='video_library' onClick={() => setPage('settings-collection')} />
+				<NavRow title={$L('Advanced')} desc={$L('Technical media information and diagnostic logging')} icon='tune' onClick={() => setPage('settings-advanced')} />
+				{loading && <InfoRow id='trakt-settings-loading' label={$L('Settings')} value={$L('Loading from Jellyfin...')} icon='sync' />}
+				{!loading && !isAdmin && <InfoRow id='trakt-settings-admin' label={$L('Read-only')} value={message || $L('Administrator permission is required to edit Trakt plugin settings.')} icon='lock' />}
+				{message && <InfoRow id='trakt-settings-message' label={$L('Information')} value={message} icon='info_outline' />}
+			</div>
+		);
+	}
+
+	if (page === 'settings-account') {
+		return (
+			<div>
+				<NavRow title={$L('Trakt settings')} desc={$L('Back to settings categories')} icon='arrow_back' onClick={() => setPage('settings')} />
 				<SectionTitle>{$L('Account authorization')}</SectionTitle>
 				<InfoRow id='trakt-account-status' label={$L('Account status')} value={statusText} icon='account_circle' />
 				{deviceCode ? (
 					<>
 						<InfoRow id='trakt-device-code' label={$L('Activation code')} value={deviceCode} icon='vpn_key' />
+						<InfoRow id='trakt-activation-url' label={$L('Activation website')} value='https://trakt.tv/activate' icon='open_in_new' />
 						<NavRow title={$L('I entered the code — check authorization')} desc={$L('Wait until Trakt confirms the device')} icon='check_circle' onClick={checkAuthorization} />
 					</>
 				) : (
 					<NavRow title={status?.status === 'connected' ? $L('Re-authorize Trakt') : $L('Connect Trakt account')} desc={$L('Start device authorization')} icon='link' onClick={startAuthorization} />
 				)}
 				{status?.status === 'connected' && <NavRow title={$L('Disconnect Trakt')} desc={$L('Revoke this server connection')} icon='link_off' onClick={disconnect} />}
-				<SectionTitle>{$L('Synchronization settings')}</SectionTitle>
-				{loading ? <InfoRow id='trakt-settings-loading' label={$L('Settings')} value={$L('Loading from Jellyfin...')} icon='sync' /> : null}
-				{!loading && !isAdmin ? <InfoRow id='trakt-settings-admin' label={$L('Settings unavailable')} value={message} icon='lock' /> : null}
-				{!loading && userConfig && SETTINGS.map((setting) => (
-					<ToggleRow
-						key={setting.key}
-						settingKey={`trakt-${setting.key}`}
-						title={$L(setting.label)}
-						desc={$L(setting.desc)}
-						icon='sync'
-						checked={Boolean(userConfig[setting.key])}
-						onToggle={() => toggleSetting(setting.key)}
-					/>
-				))}
-				{!loading && userConfig && (
+				{message && <InfoRow id='trakt-account-message' label={$L('Information')} value={message} icon='info_outline' />}
+			</div>
+		);
+	}
+
+	const settingsPageGroups = {
+		'settings-import': {
+			title: $L('Import from Trakt'),
+			keys: ['SkipWatchedImportFromTrakt', 'SkipUnwatchedImportFromTrakt', 'SkipPlaybackProgressImportFromTrakt']
+		},
+		'settings-export': {
+			title: $L('Export to Trakt'),
+			keys: ['Scrobble', 'PostSetWatched', 'PostSetUnwatched', 'PostWatchedHistory', 'PostUnwatchedHistory']
+		},
+		'settings-collection': {
+			title: $L('Collections and library'),
+			keys: ['SynchronizeCollections', 'DontRemoveItemFromTrakt']
+		},
+		'settings-advanced': {
+			title: $L('Advanced'),
+			keys: ['ExportMediaInfo', 'ExtraLogging']
+		}
+	};
+	if (settingsPageGroups[page]) {
+		const group = settingsPageGroups[page];
+		return (
+			<div>
+				<NavRow title={$L('Trakt settings')} desc={$L('Back to settings categories')} icon='arrow_back' onClick={() => setPage('settings')} />
+				<SectionTitle>{group.title}</SectionTitle>
+				{!isAdmin && <InfoRow id='trakt-settings-admin-required' label={$L('Read-only')} value={$L('Administrator permission is required to edit these settings.')} icon='lock' />}
+				{userConfig && group.keys.map((key) => {
+					const setting = SETTINGS.find((entry) => entry.key === key);
+					return (
+						<ToggleRow
+							key={setting.key}
+							settingKey={`trakt-${setting.key}`}
+							title={$L(setting.label)}
+							desc={$L(setting.desc)}
+							icon='sync'
+							checked={Boolean(userConfig[setting.key])}
+							onToggle={() => toggleSetting(setting.key)}
+						/>
+					);
+				})}
+				{page === 'settings-collection' && userConfig && (
 					<>
 						<SectionTitle>{$L('Excluded library folders')}</SectionTitle>
 						{folders.flatMap((folder) => (folder.Locations || []).map((location) => (
@@ -345,9 +394,9 @@ const TraktPanel = ({api, onSelectItem}) => {
 								onToggle={() => toggleFolder(location)}
 							/>
 						)))}
-						<NavRow title={busy ? $L('Saving...') : $L('Save Trakt settings')} desc={$L('Save options to the Jellyfin server plugin')} icon='save' onClick={saveSettings} />
 					</>
 				)}
+				{userConfig && isAdmin && <NavRow title={busy ? $L('Saving...') : $L('Save Trakt settings')} desc={$L('Save options to the Jellyfin server plugin')} icon='save' onClick={saveSettings} />}
 				{message && <InfoRow id='trakt-settings-message' label={$L('Information')} value={message} icon='info_outline' />}
 			</div>
 		);
