@@ -124,7 +124,7 @@ const PluginCenterPanel = ({
 						<SectionTitle>{$L('Server capabilities')}</SectionTitle>
 						<InfoRow id='plugin-detail-sync' label={$L('Settings sync')} value={$L('Synchronize supported client settings with the server')} icon='sync' />
 						<InfoRow id='plugin-detail-markers' label={$L('Anime Markers')} value={$L('Marker support supplied by the Moonfin server plugin')} icon='bookmark' />
-						<InfoRow id='plugin-detail-messages' label={$L('Messages and notifications')} value={$L('Server messages and live notifications')} icon='notifications' />
+						<InfoRow id='plugin-detail-messages' label={$L('Messages and notifications')} value={$L('Server messages and live notifications')} icon='info' />
 						<InfoRow id='plugin-detail-themes' label={$L('Themes and appearance')} value={$L('Server-provided theme and appearance features')} icon='palette' />
 						<InfoRow id='plugin-detail-seerr' label={$L('Seerr integration')} value={$L('Media requests and related server features')} icon='movie' />
 						<NavRow
