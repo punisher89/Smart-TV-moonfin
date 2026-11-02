@@ -34,7 +34,7 @@ test('treats a missing Trakt route as an unavailable plugin', async () => {
 	await expect(probe()).resolves.toEqual({available: false, status: 'unavailable'});
 });
 
-test('reports that the plugin exists when the status route requires administrator permission', async () => {
+test('reports that administrator permission is required to inspect installed plugins', async () => {
 	platformFetch.mockResolvedValue(response(403));
 	await expect(probe()).resolves.toEqual({available: true, status: 'permission-required'});
 });
