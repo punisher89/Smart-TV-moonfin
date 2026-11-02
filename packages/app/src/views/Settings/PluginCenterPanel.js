@@ -1,7 +1,7 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import $L from '@enact/i18n/$L';
 
-import {getPlugins} from '../../services/pluginRegistry';
+import {getPlugins, probePlugin} from '../../services/pluginRegistry';
 import {isBackKey} from '../../utils/keys';
 import {InfoRow, NavRow, SectionTitle} from './settingsRows';
 
@@ -12,7 +12,20 @@ const PluginCenterPanel = ({
 	onOpenAchievements, onOpenMoonbase, onOpenSeerr, onOpenRomm
 }) => {
 	const [selectedPluginId, setSelectedPluginId] = useState(null);
+	const [traktResult, setTraktResult] = useState(null);
 	const plugins = getPlugins();
+
+	// The official Trakt plugin exposes an admin-protected status route. Probe only when
+	// Plugin Center is opened; never poll or make this request during normal playback.
+	useEffect(() => {
+		let cancelled = false;
+		probePlugin('trakt').then((result) => {
+			if (!cancelled) setTraktResult(result);
+		});
+		return () => {
+			cancelled = true;
+		};
+	}, []);
 	const selectedPlugin = plugins.find((plugin) => plugin.id === selectedPluginId);
 	const handleDetailKeyDown = (event) => {
 		if (selectedPluginId && isBackKey(event)) {
@@ -25,10 +38,20 @@ const PluginCenterPanel = ({
 	const getAvailability = (plugin) => {
 		if (plugin.id === 'achievement-badges') return Boolean(achievements.available);
 		if (plugin.id === 'moonfin-server') return Boolean(seerr.pluginInfo);
+		if (plugin.id === 'trakt') return Boolean(traktResult?.available);
 		return false;
 	};
 
 	const getStatus = (plugin) => {
+		if (plugin.id === 'trakt') {
+			if (!traktResult) return $L('Checking...');
+			if (traktResult.status === 'connected') return $L('Connected');
+			if (traktResult.status === 'not-authorized') return $L('Installed · Trakt account not connected');
+			if (traktResult.status === 'permission-required') return $L('Administrator permission required');
+			if (traktResult.status === 'unsupported') return $L('Not supported by this server');
+			if (traktResult.status === 'error') return $L('Could not check plugin status');
+			return $L('Not detected on this server');
+		}
 		const available = getAvailability(plugin);
 		if (plugin.id === 'moonfin-server' && !moonbaseEnabled) {
 			return $L('Enable Moonfin integration to check');
@@ -44,6 +67,7 @@ const PluginCenterPanel = ({
 		const available = getAvailability(selectedPlugin);
 		const isAchievements = selectedPlugin.id === 'achievement-badges';
 		const isMoonfin = selectedPlugin.id === 'moonfin-server';
+		const isTrakt = selectedPlugin.id === 'trakt';
 
 		return (
 			<div role='presentation' onKeyDown={handleDetailKeyDown}>
@@ -83,6 +107,15 @@ const PluginCenterPanel = ({
 								onClick={onOpenAchievements}
 							/>
 						)}
+					</>
+				)}
+				{isTrakt && (
+					<>
+						<SectionTitle>{$L('Trakt features')}</SectionTitle>
+						<InfoRow id='plugin-detail-trakt-scrobble' label={$L('Playback scrobbling')} value={$L('The Jellyfin server plugin reports playback progress to Trakt')} icon='play_circle' />
+						<InfoRow id='plugin-detail-trakt-history' label={$L('Watch history sync')} value={$L('Synchronize watched movies and episodes with your Trakt account')} icon='history' />
+						<InfoRow id='plugin-detail-trakt-recommendations' label={$L('Recommendations and ratings')} value={$L('Use the server plugin API for supported Trakt recommendations and ratings')} icon='star' />
+						<InfoRow id='plugin-detail-trakt-setup' label={$L('Configuration')} value={$L('Manage account authorization and sync options in Jellyfin Dashboard → Plugins → Trakt')} icon='settings' />
 					</>
 				)}
 				{isMoonfin && (
