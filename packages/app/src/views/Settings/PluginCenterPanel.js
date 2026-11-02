@@ -6,7 +6,7 @@ import {InfoRow, NavRow, SectionTitle} from './settingsRows';
 // The registry contains only adapters shipped with this client. Server-side plugins never
 // supply executable code to the TV; they are detected through their existing API clients.
 const PluginCenterPanel = ({
-	achievements, seerr, romm, moonbaseEnabled, moonbaseStatus,
+	achievements, seerr, romm, moonbaseEnabled,
 	onOpenAchievements, onOpenMoonbase, onOpenSeerr, onOpenRomm
 }) => {
 	const plugins = getPlugins();
