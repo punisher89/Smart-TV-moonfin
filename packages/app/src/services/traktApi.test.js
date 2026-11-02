@@ -39,19 +39,19 @@ test('reports that the plugin exists when the status route requires administrato
 	await expect(probe()).resolves.toEqual({available: true, status: 'permission-required'});
 });
 
-test('reports an authorized Trakt account', async () => {
-	platformFetch.mockResolvedValue(response(200, '{"isAuthorized":true}'));
-	await expect(probe()).resolves.toEqual({available: true, status: 'connected', isAuthorized: true});
+test('detects the installed Trakt plugin without polling its blocking authorization endpoint', async () => {
+	platformFetch.mockResolvedValue(response(200, '[{"Id":"4fe3201e-d6ae-4f2e-8917-e12bda571281","Version":"1.2.3","Status":"Active"}]'));
+	await expect(probe()).resolves.toEqual({available: true, status: 'installed', version: '1.2.3', pluginStatus: 'Active'});
 	expect(platformFetch).toHaveBeenCalledWith(
-		'http://jellyfin.local/Trakt/Users/user-123/PollAuthorizationStatus',
+		'http://jellyfin.local/Plugins',
 		expect.objectContaining({method: 'GET'}),
 		10000
 	);
 });
 
-test('distinguishes an installed plugin with no linked Trakt account', async () => {
-	platformFetch.mockResolvedValue(response(200, '{"isAuthorized":false}'));
-	await expect(probe()).resolves.toEqual({available: true, status: 'not-authorized', isAuthorized: false});
+test('reports a disabled Trakt plugin without treating it as missing', async () => {
+	platformFetch.mockResolvedValue(response(200, '[{"Id":"4fe3201e-d6ae-4f2e-8917-e12bda571281","Status":"Disabled"}]'));
+	await expect(probe()).resolves.toEqual({available: true, status: 'disabled', version: null, pluginStatus: 'Disabled'});
 });
 
 
