@@ -1279,7 +1279,6 @@ const Settings = ({ onBack, onLibrariesChanged, onRunSetupWizard, onSelectItem, 
 				seerr={seerr}
 				romm={romm}
 				moonbaseEnabled={settings.useMoonfinPlugin}
-				moonbaseStatus={moonfinStatus}
 				onOpenAchievements={() => openAchievementsView('achievements', 'plugin-center-achievement-badges')}
 				onOpenMoonbase={() => openScreen('account', 'settingsSync', 'plugin-center-moonbase')}
 				onOpenSeerr={() => openScreen('integrations', 'seerr', 'plugin-center-seerr')}
