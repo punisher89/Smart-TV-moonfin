@@ -82,6 +82,7 @@ export const probe = async () => {
 		};
 	} catch (error) {
 		if (error.status === 403) return {available: false, status: 'permission-required'};
+		if (error.status === 404) return {available: false, status: 'unavailable'};
 		return {available: false, status: 'error', error};
 	}
 };
