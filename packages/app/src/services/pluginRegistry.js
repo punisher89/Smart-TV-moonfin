@@ -5,6 +5,7 @@
 // server-side plugin is available. The registry keeps discovery and metadata consistent.
 
 import * as achievementsApi from './achievementsApi';
+import * as traktApi from './traktApi';
 
 const adapters = new Map();
 
@@ -48,8 +49,16 @@ export const probePlugin = async (id, context = {}) => {
 		return {id, status: 'unsupported', available: false};
 	}
 	try {
-		const available = await adapter.detect(context);
-		return {id, status: available ? 'available' : 'unavailable', available: Boolean(available)};
+		const detection = await adapter.detect(context);
+		if (detection && typeof detection === 'object') {
+			return {
+				...detection,
+				id,
+				available: Boolean(detection.available),
+				status: typeof detection.status === 'string' ? detection.status : (detection.available ? 'available' : 'unavailable')
+			};
+		}
+		return {id, status: detection ? 'available' : 'unavailable', available: Boolean(detection)};
 	} catch (error) {
 		return {id, status: 'error', available: false, error};
 	}
@@ -84,4 +93,15 @@ registerPlugin({
 	// SeerrContext already performs the authenticated Moonfin Ping at setup. Reuse that
 	// result rather than making the Plugin Center issue another request.
 	detect: ({pluginInfo} = {}) => Boolean(pluginInfo && typeof pluginInfo === 'object')
+});
+
+registerPlugin({
+	id: 'trakt',
+	name: 'Trakt',
+	description: 'Watch history synchronization and playback scrobbling through the Jellyfin server plugin',
+	icon: 'history',
+	category: 'tracking',
+	serverTypes: ['jellyfin'],
+	order: 30,
+	detect: () => traktApi.probe()
 });
