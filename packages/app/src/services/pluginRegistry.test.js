@@ -18,6 +18,27 @@ test('registers the built-in Achievement Badges adapter with useful metadata', (
 	});
 });
 
+test('registers the Moonfin server adapter and reuses the existing ping result', async () => {
+	expect(registry.getPlugin('moonfin-server')).toMatchObject({
+		id: 'moonfin-server',
+		name: 'Moonfin Server Plugin',
+		category: 'server',
+		serverTypes: ['jellyfin']
+	});
+	await expect(registry.probePlugin('moonfin-server', {
+		serverType: 'jellyfin',
+		pluginInfo: {version: '1.0'}
+	})).resolves.toEqual({
+		id: 'moonfin-server', status: 'available', available: true
+	});
+	await expect(registry.probePlugin('moonfin-server', {
+		serverType: 'jellyfin',
+		pluginInfo: null
+	})).resolves.toEqual({
+		id: 'moonfin-server', status: 'unavailable', available: false
+	});
+});
+
 test('rejects malformed and duplicate adapters', () => {
 	expect(() => registry.registerPlugin({id: 'Bad ID', name: 'Bad', detect: jest.fn()})).toThrow();
 	expect(() => registry.registerPlugin({id: 'achievement-badges', name: 'Duplicate', detect: jest.fn()})).toThrow(/already registered/);
