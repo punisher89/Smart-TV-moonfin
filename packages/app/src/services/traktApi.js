@@ -1,6 +1,7 @@
-// Read-only client for the official Jellyfin Trakt plugin endpoints.
-// Playback scrobbling and watch-state synchronization remain owned by the server plugin;
-// this client only reports whether the plugin is installed and whether this user is linked.
+// Client for the official Jellyfin Trakt plugin endpoints.
+// It never handles playback events itself: scrobbling and watch-state synchronization remain
+// server-owned. Client requests are limited to configuration, device authorization, discovery,
+// and explicit user-initiated ratings.
 import {getAuthHeader, getServerType, getServerUrl, getUserId} from './jellyfinApi';
 import {legacyAuthHeader} from '../utils/serverRoutes';
 import {platformFetch} from './secureFetch';
