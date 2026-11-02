@@ -64,42 +64,24 @@ export const probe = async () => {
 		return {available: false, status: 'unsupported'};
 	}
 
-	const serverUrl = getServerUrl();
-	const userId = getUserId();
-	const authHeader = getAuthHeader();
-	if (!serverUrl || !userId || !authHeader) {
-		return {available: false, status: 'unavailable'};
-	}
-
-	const url = `${serverUrl.replace(/\/+$/, '')}/Trakt/Users/${encodeURIComponent(userId)}/PollAuthorizationStatus`;
+	// PollAuthorizationStatus is not a discovery endpoint: the official plugin blocks that
+	// request on its device-authorization task. Use Jellyfin's installed-plugin list instead,
+	// so opening Plugin Center can never wait for an OAuth device flow to finish.
 	try {
-		const response = await platformFetch(url, {
-			method: 'GET',
-			headers: {
-				Authorization: authHeader,
-				...legacyAuthHeader(getServerType(), authHeader),
-				Accept: 'application/json'
-			}
-		}, TIMEOUT_MS);
-
-		if (response.status === 404) return {available: false, status: 'unavailable'};
-		// The official plugin protects its status endpoint with Jellyfin's elevation policy.
-		// A 403 therefore means the route cannot be inspected with this account, not that
-		// the plugin is missing.
-		if (response.status === 403) return {available: true, status: 'permission-required'};
-		if (!response.ok) return {available: true, status: 'error'};
-
-		const body = await response.text();
-		const result = body ? JSON.parse(body) : null;
-		if (!result || typeof result.isAuthorized !== 'boolean') {
-			return {available: true, status: 'unknown'};
-		}
+		const plugins = await request('/Plugins');
+		const plugin = Array.isArray(plugins)
+			? plugins.find((entry) => String(entry.Id || entry.id).toLowerCase() === TRAKT_PLUGIN_ID.toLowerCase())
+			: null;
+		if (!plugin) return {available: false, status: 'unavailable'};
+		const pluginStatus = plugin.Status || plugin.status;
 		return {
 			available: true,
-			status: result.isAuthorized ? 'connected' : 'not-authorized',
-			isAuthorized: result.isAuthorized
+			status: pluginStatus === 'Disabled' ? 'disabled' : 'installed',
+			version: plugin.Version || plugin.version || null,
+			pluginStatus: pluginStatus || 'Active'
 		};
 	} catch (error) {
+		if (error.status === 403) return {available: false, status: 'permission-required'};
 		return {available: false, status: 'error', error};
 	}
 };
