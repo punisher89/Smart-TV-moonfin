@@ -84,7 +84,13 @@ const TraktPanel = ({api, onSelectItem}) => {
 			]);
 			const nextConfig = config || {TraktUsers: []};
 			setConfiguration(nextConfig);
-			setUserConfig(userConfigFor(nextConfig, currentUser.Id));
+			const ownConfig = userConfigFor(nextConfig, currentUser.Id);
+			setUserConfig(ownConfig);
+			setStatus((current) => ({
+				...(current || {available: true}),
+				available: true,
+				status: ownConfig.AccessToken && ownConfig.RefreshToken ? 'connected' : 'not-authorized'
+			}));
 			setFolders(Array.isArray(virtualFolders) ? virtualFolders : []);
 		} catch (error) {
 			setMessage(error.status === 403
@@ -284,10 +290,14 @@ const TraktPanel = ({api, onSelectItem}) => {
 			? $L('Connected')
 			: status.status === 'not-authorized'
 				? $L('Installed · account not connected')
+				: status.status === 'installed'
+					? $L('Installed · account status not checked')
 				: status.status === 'permission-required'
 					? $L('Administrator permission required')
-					: status.status === 'unsupported'
-						? $L('Jellyfin server required')
+					: status.status === 'disabled'
+						? $L('Trakt plugin is disabled')
+						: status.status === 'unsupported'
+							? $L('Jellyfin server required')
 						: status.status === 'unavailable'
 							? $L('Trakt plugin not detected')
 							: $L('Could not check Trakt status');
