@@ -1074,6 +1074,15 @@ export const SETTINGS_SCHEMA = [
 				rows: [{kind: KIND.CUSTOM, id: 'pluginCenter', render: 'pluginCenter'}]
 			},
 			{
+				id: 'trakt',
+				clean: true,
+				icon: 'history',
+				label: () => $L('Trakt'),
+				description: () => $L('Trakt account, synchronization settings, recommendations and ratings'),
+				keywords: () => [$L('Watch history'), $L('Scrobbling'), $L('Recommendations'), $L('Ratings')],
+				rows: [{kind: KIND.CUSTOM, id: 'traktPanel', render: 'traktPanel'}]
+			},
+			{
 				id: 'seerr',
 				clean: true,
 				icon: 'seerr',
