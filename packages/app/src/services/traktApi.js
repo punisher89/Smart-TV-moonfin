@@ -19,7 +19,7 @@ export const probe = async () => {
 		return {available: false, status: 'unavailable'};
 	}
 
-	const url = `${serverUrl.replace(/\\/+$/, '')}/Trakt/Users/${encodeURIComponent(userId)}/PollAuthorizationStatus`;
+	const url = `${serverUrl.replace(/\/+$/, '')}/Trakt/Users/${encodeURIComponent(userId)}/PollAuthorizationStatus`;
 	try {
 		const response = await platformFetch(url, {
 			method: 'GET',
