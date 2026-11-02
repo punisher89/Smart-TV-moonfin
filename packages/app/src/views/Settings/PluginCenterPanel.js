@@ -9,7 +9,7 @@ import {InfoRow, NavRow, SectionTitle} from './settingsRows';
 // supply executable code to the TV; they are detected through their existing API clients.
 const PluginCenterPanel = ({
 	achievements, seerr, romm, moonbaseEnabled,
-	onOpenAchievements, onOpenMoonbase, onOpenSeerr, onOpenRomm
+	onOpenAchievements, onOpenMoonbase, onOpenSeerr, onOpenRomm, onOpenTrakt
 }) => {
 	const [selectedPluginId, setSelectedPluginId] = useState(null);
 	const [traktResult, setTraktResult] = useState(null);
@@ -112,9 +112,9 @@ const PluginCenterPanel = ({
 				{isTrakt && (
 					<>
 						<SectionTitle>{$L('Trakt features')}</SectionTitle>
-						<InfoRow id='plugin-detail-trakt-scrobble' label={$L('Playback scrobbling')} value={$L('The Jellyfin server plugin reports playback progress to Trakt')} icon='play_circle' />
-						<InfoRow id='plugin-detail-trakt-history' label={$L('Watch history sync')} value={$L('Synchronize watched movies and episodes with your Trakt account')} icon='history' />
-						<InfoRow id='plugin-detail-trakt-setup' label={$L('Configuration')} value={$L('Manage account authorization and sync options in Jellyfin Dashboard → Plugins → Trakt')} icon='settings' />
+						<InfoRow id='plugin-detail-trakt-scrobble' label={$L('Playback scrobbling')} value={$L('Live playback reporting and watch history synchronization are handled by the server plugin')} icon='play_circle' />
+						<InfoRow id='plugin-detail-trakt-discovery' label={$L('Discovery and ratings')} value={$L('Personalized movie and show recommendations, plus item ratings')} icon='star' />
+						<NavRow spotlightId='plugin-detail-open-trakt' title={$L('Open Trakt pages and settings')} desc={$L('Recommendations, ratings, account and synchronization settings')} icon='open_in_new' onClick={onOpenTrakt} />
 					</>
 				)}
 				{isMoonfin && (
