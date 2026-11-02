@@ -47,7 +47,7 @@ test('rejects malformed and duplicate adapters', () => {
 test('sorts adapters by order and then by name', () => {
 	const removeZ = registry.registerPlugin({id: 'test-z', name: 'Zed', order: 50, detect: jest.fn()});
 	const removeA = registry.registerPlugin({id: 'test-a', name: 'Alpha', order: 50, detect: jest.fn()});
-	expect(registry.getPlugins().map((plugin) => plugin.id)).toEqual(['achievement-badges', 'test-a', 'test-z']);
+	expect(registry.getPlugins().map((plugin) => plugin.id)).toEqual(['achievement-badges', 'moonfin-server', 'test-a', 'test-z']);
 	removeA();
 	removeZ();
 });
