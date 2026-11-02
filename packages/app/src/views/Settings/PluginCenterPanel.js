@@ -85,7 +85,7 @@ const PluginCenterPanel = ({
 					id='plugin-detail-status'
 					label={$L('Status')}
 					value={getStatus(selectedPlugin)}
-					icon='info_outline'
+					icon='info'
 				/>
 				<InfoRow
 					id='plugin-detail-description'
@@ -97,15 +97,15 @@ const PluginCenterPanel = ({
 					<>
 						<SectionTitle>{$L('Available client features')}</SectionTitle>
 						<InfoRow id='plugin-detail-achievements' label={$L('Achievement profiles')} value={$L('View earned badges and progress')} icon='military_tech' />
-						<InfoRow id='plugin-detail-quests' label={$L('Ranks and quests')} value={$L('Progression and challenges provided by the server')} icon='flag' />
+						<InfoRow id='plugin-detail-quests' label={$L('Ranks and quests')} value={$L('Progression and challenges provided by the server')} icon='stars' />
 						<InfoRow id='plugin-detail-cosmetics' label={$L('Shop and cosmetics')} value={$L('Browse and equip available profile items')} icon='palette' />
-						<InfoRow id='plugin-detail-social' label={$L('Friends and messages')} value={$L('Social features when enabled by the server')} icon='people' />
+						<InfoRow id='plugin-detail-social' label={$L('Friends and messages')} value={$L('Social features when enabled by the server')} icon='person' />
 						{available && (
 							<NavRow
 								spotlightId='plugin-detail-open-achievements'
 								title={$L('Open Achievement Badges')}
 								desc={$L('Go to the existing achievements screen')}
-								icon='open_in_new'
+								icon='link'
 								onClick={onOpenAchievements}
 							/>
 						)}
@@ -116,7 +116,7 @@ const PluginCenterPanel = ({
 						<SectionTitle>{$L('Trakt features')}</SectionTitle>
 						<InfoRow id='plugin-detail-trakt-scrobble' label={$L('Playback scrobbling')} value={$L('Live playback reporting and watch history synchronization are handled by the server plugin')} icon='play_circle' />
 						<InfoRow id='plugin-detail-trakt-discovery' label={$L('Discovery and ratings')} value={$L('Personalized movie and show recommendations, plus item ratings')} icon='star' />
-						<NavRow spotlightId='plugin-detail-open-trakt' title={$L('Open Trakt pages and settings')} desc={$L('Recommendations, ratings, account and synchronization settings')} icon='open_in_new' onClick={onOpenTrakt} />
+						<NavRow spotlightId='plugin-detail-open-trakt' title={$L('Open Trakt pages and settings')} desc={$L('Recommendations, ratings, account and synchronization settings')} icon='link' onClick={onOpenTrakt} />
 					</>
 				)}
 				{isMoonfin && (
