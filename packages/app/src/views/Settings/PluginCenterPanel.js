@@ -46,7 +46,7 @@ const PluginCenterPanel = ({
 		const isMoonfin = selectedPlugin.id === 'moonfin-server';
 
 		return (
-			<div onKeyDown={handleDetailKeyDown}>
+			<div role='presentation' onKeyDown={handleDetailKeyDown}>
 				<NavRow
 					spotlightId='plugin-detail-back'
 					title={$L('Plugin Center')}
