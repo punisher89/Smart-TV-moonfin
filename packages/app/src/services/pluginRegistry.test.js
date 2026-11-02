@@ -75,5 +75,5 @@ test('does not call a Jellyfin adapter on Emby and isolates adapter errors', asy
 test('returns a result map for every registered adapter', async () => {
 	const results = await registry.probePlugins({serverType: 'jellyfin'});
 	expect(results['achievement-badges']).toMatchObject({status: 'available', available: true});
-	expect(results.trakt).toMatchObject({status: 'error', available: false});
+	expect(results.trakt).toMatchObject({status: 'unavailable', available: false});
 });
