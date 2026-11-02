@@ -310,12 +310,12 @@ const TraktPanel = ({api, onSelectItem}) => {
 				<InfoRow id='trakt-settings-status' label={$L('Account status')} value={statusText} icon='account_circle' />
 				<NavRow title={$L('Account and authorization')} desc={$L('Connect, re-authorize or disconnect your Trakt account')} icon='account_circle' onClick={() => setPage('settings-account')} />
 				<NavRow title={$L('Import from Trakt')} desc={$L('Watched state and playback progress coming into Jellyfin')} icon='download' onClick={() => setPage('settings-import')} />
-				<NavRow title={$L('Export to Trakt')} desc={$L('Live scrobbling and scheduled watch-history updates')} icon='upload' onClick={() => setPage('settings-export')} />
+				<NavRow title={$L('Export to Trakt')} desc={$L('Live scrobbling and scheduled watch-history updates')} icon='sync' onClick={() => setPage('settings-export')} />
 				<NavRow title={$L('Collections and library')} desc={$L('Collection sync and excluded library folders')} icon='video_library' onClick={() => setPage('settings-collection')} />
 				<NavRow title={$L('Advanced')} desc={$L('Technical media information and diagnostic logging')} icon='tune' onClick={() => setPage('settings-advanced')} />
 				{loading && <InfoRow id='trakt-settings-loading' label={$L('Settings')} value={$L('Loading from Jellyfin...')} icon='sync' />}
 				{!loading && !isAdmin && <InfoRow id='trakt-settings-admin' label={$L('Read-only')} value={message || $L('Administrator permission is required to edit Trakt plugin settings.')} icon='lock' />}
-				{message && <InfoRow id='trakt-settings-message' label={$L('Information')} value={message} icon='info_outline' />}
+				{message && <InfoRow id='trakt-settings-message' label={$L('Information')} value={message} icon='info' />}
 			</div>
 		);
 	}
@@ -328,15 +328,15 @@ const TraktPanel = ({api, onSelectItem}) => {
 				<InfoRow id='trakt-account-status' label={$L('Account status')} value={statusText} icon='account_circle' />
 				{deviceCode ? (
 					<>
-						<InfoRow id='trakt-device-code' label={$L('Activation code')} value={deviceCode} icon='vpn_key' />
-						<InfoRow id='trakt-activation-url' label={$L('Activation website')} value='https://trakt.tv/activate' icon='open_in_new' />
+						<InfoRow id='trakt-device-code' label={$L('Activation code')} value={deviceCode} icon='lock' />
+						<InfoRow id='trakt-activation-url' label={$L('Activation website')} value='https://trakt.tv/activate' icon='link' />
 						<NavRow title={$L('I entered the code — check authorization')} desc={$L('Wait until Trakt confirms the device')} icon='check_circle' onClick={checkAuthorization} />
 					</>
 				) : (
 					<NavRow title={status?.status === 'connected' ? $L('Re-authorize Trakt') : $L('Connect Trakt account')} desc={$L('Start device authorization')} icon='link' onClick={startAuthorization} />
 				)}
-				{status?.status === 'connected' && <NavRow title={$L('Disconnect Trakt')} desc={$L('Revoke this server connection')} icon='link_off' onClick={disconnect} />}
-				{message && <InfoRow id='trakt-account-message' label={$L('Information')} value={message} icon='info_outline' />}
+				{status?.status === 'connected' && <NavRow title={$L('Disconnect Trakt')} desc={$L('Revoke this server connection')} icon='link' onClick={disconnect} />}
+				{message && <InfoRow id='trakt-account-message' label={$L('Information')} value={message} icon='info' />}
 			</div>
 		);
 	}
@@ -396,8 +396,8 @@ const TraktPanel = ({api, onSelectItem}) => {
 						)))}
 					</>
 				)}
-				{userConfig && isAdmin && <NavRow title={busy ? $L('Saving...') : $L('Save Trakt settings')} desc={$L('Save options to the Jellyfin server plugin')} icon='save' onClick={saveSettings} />}
-				{message && <InfoRow id='trakt-settings-message' label={$L('Information')} value={message} icon='info_outline' />}
+				{userConfig && isAdmin && <NavRow title={busy ? $L('Saving...') : $L('Save Trakt settings')} desc={$L('Save options to the Jellyfin server plugin')} icon='check' onClick={saveSettings} />}
+				{message && <InfoRow id='trakt-settings-message' label={$L('Information')} value={message} icon='info' />}
 			</div>
 		);
 	}
@@ -408,7 +408,7 @@ const TraktPanel = ({api, onSelectItem}) => {
 				<NavRow title={$L('Trakt')} desc={$L('Back to Trakt overview')} icon='arrow_back' onClick={() => setPage('home')} />
 				<SectionTitle>{recommendationType === 'shows' ? $L('Recommended shows') : $L('Recommended movies')}</SectionTitle>
 				{busy && <InfoRow id='trakt-recommendations-loading' label={$L('Recommendations')} value={$L('Loading...')} icon='sync' />}
-				{!busy && recommendations.length === 0 && <InfoRow id='trakt-recommendations-empty' label={$L('No recommendations')} value={$L('Trakt has not returned any recommendations for this account.')} icon='info_outline' />}
+				{!busy && recommendations.length === 0 && <InfoRow id='trakt-recommendations-empty' label={$L('No recommendations')} value={$L('Trakt has not returned any recommendations for this account.')} icon='info' />}
 				{recommendations.map((entry, index) => {
 					const title = entry.title || entry.Title || $L('Unknown title');
 					const year = entry.year || entry.Year;
@@ -423,7 +423,7 @@ const TraktPanel = ({api, onSelectItem}) => {
 						/>
 					);
 				})}
-				{message && <InfoRow id='trakt-recommendations-message' label={$L('Information')} value={message} icon='info_outline' />}
+				{message && <InfoRow id='trakt-recommendations-message' label={$L('Information')} value={message} icon='info' />}
 			</div>
 		);
 	}
@@ -454,7 +454,7 @@ const TraktPanel = ({api, onSelectItem}) => {
 						))}
 					</>
 				)}
-				{message && <InfoRow id='trakt-rating-message' label={$L('Information')} value={message} icon='info_outline' />}
+				{message && <InfoRow id='trakt-rating-message' label={$L('Information')} value={message} icon='info' />}
 			</div>
 		);
 	}
@@ -469,7 +469,7 @@ const TraktPanel = ({api, onSelectItem}) => {
 			<NavRow title={$L('Rate library items')} desc={$L('Send a rating for a movie or episode to Trakt')} icon='star' onClick={loadLibraryItems} />
 			<SectionTitle>{$L('About synchronization')}</SectionTitle>
 			<InfoRow id='trakt-server-sync' label={$L('Server-managed sync')} value={$L('Playback scrobbling, watched history and collection synchronization are performed by the Jellyfin Trakt plugin.')} icon='sync' />
-			{message && <InfoRow id='trakt-message' label={$L('Information')} value={message} icon='info_outline' />}
+			{message && <InfoRow id='trakt-message' label={$L('Information')} value={message} icon='info' />}
 		</div>
 	);
 };
