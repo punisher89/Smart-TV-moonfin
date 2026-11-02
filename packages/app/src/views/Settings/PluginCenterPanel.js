@@ -47,6 +47,8 @@ const PluginCenterPanel = ({
 			if (!traktResult) return $L('Checking...');
 			if (traktResult.status === 'connected') return $L('Connected');
 			if (traktResult.status === 'not-authorized') return $L('Installed · Trakt account not connected');
+			if (traktResult.status === 'installed') return traktResult.version ? `${$L('Installed')} · ${traktResult.version}` : $L('Installed');
+			if (traktResult.status === 'disabled') return $L('Trakt plugin is disabled');
 			if (traktResult.status === 'permission-required') return $L('Administrator permission required');
 			if (traktResult.status === 'unsupported') return $L('Not supported by this server');
 			if (traktResult.status === 'error') return $L('Could not check plugin status');
