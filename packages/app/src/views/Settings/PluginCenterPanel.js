@@ -5,12 +5,15 @@ import {InfoRow, NavRow, SectionTitle} from './settingsRows';
 
 // The registry contains only adapters shipped with this client. Server-side plugins never
 // supply executable code to the TV; they are detected through their existing API clients.
-const PluginCenterPanel = ({achievements, onOpenAchievements}) => {
+const PluginCenterPanel = ({
+	achievements, seerr, romm, moonbaseEnabled, moonbaseStatus,
+	onOpenAchievements, onOpenMoonbase, onOpenSeerr, onOpenRomm
+}) => {
 	const plugins = getPlugins();
 
 	return (
 		<div>
-			<SectionTitle>{$L('Client Integrations')}</SectionTitle>
+			<SectionTitle>{$L('Client Plugin Adapters')}</SectionTitle>
 			{plugins.map((plugin) => {
 				const available = plugin.id === 'achievement-badges'
 					? achievements.available
@@ -40,6 +43,37 @@ const PluginCenterPanel = ({achievements, onOpenAchievements}) => {
 					/>
 				);
 			})}
+			<SectionTitle>{$L('Service Integrations')}</SectionTitle>
+			<NavRow
+				spotlightId='plugin-center-moonbase'
+				title={$L('Moonbase')}
+				desc={moonbaseEnabled ? (moonbaseStatus || $L('Enabled')) : $L('Disabled')}
+				icon='sync'
+				onClick={onOpenMoonbase}
+			/>
+			<NavRow
+				spotlightId='plugin-center-seerr'
+				title={$L('Seerr')}
+				desc={seerr.isEnabled ? $L('Available') : $L('Not configured')}
+				icon='seerr'
+				onClick={onOpenSeerr}
+			/>
+			{romm.available ? (
+				<NavRow
+					spotlightId='plugin-center-romm'
+					title='RomM'
+					desc={$L('Available')}
+					icon='sports_esports'
+					onClick={onOpenRomm}
+				/>
+			) : (
+				<InfoRow
+					id='plugin-center-romm'
+					label='RomM'
+					value={$L('Not configured')}
+					icon='sports_esports'
+				/>
+			)}
 			<SectionTitle>{$L('How integrations work')}</SectionTitle>
 			<InfoRow
 				id='plugin-center-security'
