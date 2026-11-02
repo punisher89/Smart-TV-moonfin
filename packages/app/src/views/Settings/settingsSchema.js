@@ -1076,6 +1076,7 @@ export const SETTINGS_SCHEMA = [
 			{
 				id: 'trakt',
 				clean: true,
+				when: (ctx) => ctx.serverType === 'jellyfin',
 				icon: 'history',
 				label: () => $L('Trakt'),
 				description: () => $L('Trakt account, synchronization settings, recommendations and ratings'),
