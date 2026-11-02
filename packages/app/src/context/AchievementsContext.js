@@ -62,7 +62,7 @@ export const AchievementsProvider = ({children}) => {
 		if (!isAuthenticated || !serverUrl || !accessToken) return undefined;
 
 		let cancelled = false;
-		afterHomeReady().then(() => (cancelled ? {available: false} : probePlugin('achievement-badges', {serverType: 'jellyfin'}))).then((result) => {
+		afterHomeReady().then(() => (cancelled ? {available: false} : probePlugin('achievement-badges'))).then((result) => {
 			const available = result.available;
 			if (cancelled) return;
 			const flags = achievementsApi.getFlags();
